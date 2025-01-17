@@ -1,0 +1,7 @@
+(executable
+ (name bench_mempool)
+ (libraries core_bench mempool_OCaml unix core_unix.command_unix))
+
+(executable
+ (name bench_mempool_advanced)
+ (libraries core_bench mempool_OCaml unix core_unix.command_unix))

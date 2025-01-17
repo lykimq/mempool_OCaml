@@ -17,4 +17,5 @@
   (ocaml (>= 4.14.0))
   (dune (>= 3.0.0))
   (alcotest :with-test)
+  (core_bench :with-test)
   (ocamlformat :build)))
