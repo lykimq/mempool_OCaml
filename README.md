@@ -34,3 +34,21 @@ dune runtest
 ```bash
 dune build @fmt --auto-promote
 ```
+
+## Benchmarks
+
+The project includes performance benchmarks (using `Core_bench`) to measure and optimize critical operations. Benchmarks are located in the `benchmark/` directory and cover:
+
+- Transaction insertion throughput
+- Memory usage patterns
+- Transaction validation performance
+- Priority queue operations
+
+To run the benchmarks:
+
+```bash
+cd benchmark
+dune build
+dune exec bench_mempool.exe
+dune exec bench_mempool_advanced.exe
+```

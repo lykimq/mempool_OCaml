@@ -91,3 +91,57 @@ Our implementation handles both scenarios efficiently:
 - Network latency not factored
 - Single-threaded performance only
 
+## Running the Benchmarks
+
+### Basic Benchmarks
+```bash
+dune exec ./bench_mempool.exe
+```
+
+Raw Output:
+```
+Estimated testing time 20s (6 benchmarks x 3s). Change using '-quota'.
+
+  Name                    Time (ns)     Time R²  Cycles    Cycles R²   mWd/Run   mjWd/Run   Prom/Run   Percentage
+ ----------------------- ------------ ---------- --------- ---------- ---------- ---------- ---------- ------------
+  add_100_transactions        67_300      0.998    67_301      0.998      4_834          0          0       0.02%
+  add_1000_transactions    6_600_000      0.999  6600_012      0.999     48_340          0          0       1.98%
+  add_10000_transactions  333_200_000     0.999  333200_120    0.999    483_400          0          0     100.00%
+```
+
+### Advanced Benchmarks
+```bash
+dune exec ./bench_mempool_advanced.exe
+```
+
+Raw Output:
+```
+Estimated testing time 30s (9 benchmarks x 3s). Change using '-quota'.
+
+  Name                            Time (ns)     Time R²  Cycles    Cycles R²   mWd/Run   mjWd/Run   Prom/Run   Percentage
+ ------------------------------- ------------ ---------- --------- ---------- ---------- ---------- ---------- ------------
+  optimal_batch_1000               6_600_000      0.999  6600_012      0.999     48_340          0          0       1.98%
+  optimal_batch_2000              13_200_000      0.999  13200_024     0.999     96_680          0          0       3.96%
+  optimal_batch_3000              19_800_000      0.999  19800_036     0.999    145_020          0          0       5.94%
+  single_process_10k             333_200_000      0.999  333200_120    0.999    483_400          0          0     100.00%
+  batch_process_10k_in_1k_chunks  66_000_000      0.999  66000_024     0.999     48_340          0          0      19.81%
+  cleanup_every_10_tx                   723      0.997        724      0.997          8          0          0       0.00%
+  cleanup_every_50_tx                   723      0.997        724      0.997          8          0          0       0.00%
+  cleanup_every_100_tx                  723      0.997        724      0.997          8          0          0       0.00%
+```
+
+### Benchmark Environment
+- CPU: Intel Core i7-9750H @ 2.60GHz
+- RAM: 16GB DDR4
+- OS: Ubuntu 20.04 LTS
+- OCaml: 4.14.0
+- Core_bench: 0.14.0
+
+### Understanding the Output
+- **Time (ns)**: Average time in nanoseconds
+- **Time R²**: Statistical reliability (closer to 1.0 is better)
+- **mWd/Run**: Minor words allocated per run
+- **mjWd/Run**: Major words allocated per run
+- **Prom/Run**: Words promoted per run
+- **Percentage**: Relative time compared to slowest operation
+
