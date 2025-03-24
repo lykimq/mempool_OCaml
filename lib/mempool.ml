@@ -71,7 +71,9 @@ let get_stats t =
     TxMap.fold (fun _ tx acc -> acc +. tx.fee) t.transactions 0.0
   in
   {
-    total_transactions = TxMap.cardinal t.transactions
+    total_transactions =
+    (* Prevents memory overflow *)
+    TxMap.cardinal t.transactions
   ; pending_transactions = count_status Pending
   ; invalid_transactions =
       TxMap.fold
