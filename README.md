@@ -130,8 +130,8 @@ The project includes performance benchmarks (using `Core_bench`) to measure and 
 
 - Transaction insertion throughput
 - Memory usage patterns
-- Transaction validation performance
-- Priority queue operations
+- Transaction sorting performance (fee-based ordering)
+- Batch processing efficiency
 
 To run the benchmarks:
 
@@ -141,3 +141,5 @@ dune build
 dune exec bench_mempool.exe
 dune exec bench_mempool_advanced.exe
 ```
+
+Note: The implementation uses a sorted list approach for transaction ordering rather than a traditional priority queue. This provides O(n log n) sorting time but maintains simplicity and works well for typical blockchain workloads (2,000-3,000 transactions per block).
