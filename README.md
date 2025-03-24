@@ -50,6 +50,56 @@ The implementation separates transactions and their status for several benefits:
    - Easier to extend status types
    - Simplified transaction validation logic
 
+### Mempool Behavior
+
+#### Implementation Behavior
+
+1. **Transaction Validation**
+   - Validates minimum fee requirements
+   - Checks transaction age (expires after configurable time)
+   - Prevents duplicate transactions
+   - Enforces maximum pool size limits
+
+2. **Transaction Management**
+   - Adds transactions with status tracking (Valid/Invalid/Pending)
+   - Removes transactions by ID
+   - Retrieves transactions by ID
+   - Gets sorted transactions by fee (higher fees first)
+
+3. **Maintenance**
+   - Automatic cleanup of expired transactions
+   - Statistics tracking (total, pending, invalid transactions)
+   - Fee calculation and monitoring
+
+#### Real-World Blockchain Behavior
+
+1. **Transaction Lifecycle**
+   - Receives transactions from network peers
+   - Validates against consensus rules
+   - Prioritizes by fee and other factors
+   - Provides transactions for block creation
+   - Removes included transactions after block confirmation
+
+2. **Network Interaction**
+   - Broadcasts new transactions to peers
+   - Receives and validates incoming transactions
+   - Maintains transaction propagation
+   - Handles orphan transactions
+
+3. **Resource Management**
+   - Memory usage optimization
+   - Transaction eviction policies
+   - Network bandwidth management
+   - CPU usage optimization
+
+4. **Security Considerations**
+   - Protection against spam attacks
+   - Rate limiting
+   - Transaction size limits
+   - Fee market dynamics
+
+Note: This implementation focuses on core mempool functionality. Real-world blockchain implementations typically include additional features like network protocol handling, peer management, and more sophisticated transaction validation rules.
+
 ## Prerequisites
 
 - OCaml (>= 4.14.0)
