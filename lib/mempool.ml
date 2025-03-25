@@ -86,8 +86,16 @@ let get_stats t =
 (** Clean old transactions *)
 let cleanup t =
   let current_time = Unix.time () in
-  TxMap.iter
-    (fun id tx ->
+  let expired_ids =
+    TxMap.fold
+    (fun id tx acc ->
       if current_time -. tx.timestamp > t.config.max_age then
-        remove_transaction t id)
+        id :: acc
+      else
+        acc
+    )
     t.transactions
+    []
+  in
+  List.iter (remove_transaction t) expired_ids;
+

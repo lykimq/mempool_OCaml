@@ -10,7 +10,7 @@ let create_test_transactions n =
     receiver = "receiver" ^ string_of_int i;
     amount = float_of_int i; (* 1 token *)
     fee = float_of_int (i mod 100) *. 0.01; (* 1% fee *)
-    timestamp = Unix.time ()
+    timestamp = Unix.time () +. float_of_int i *. 0.001
   })
 
 
@@ -27,14 +27,16 @@ let bench_optimal_batch_size () =
   ) batch_sizes
 
 (* Helper function to split a list into two parts *)
-let rec split_at n lst =
-  if n = 0 then ([], lst)
-  else
-    match lst with
-    | [] -> ([], [])
-    | x :: xs ->
-        let (chunk, rest) = split_at (n - 1) xs in
-        (x :: chunk, rest)
+let split_at n lst =
+  let rec aux i acc rest =
+    if i = 0 then (List.rev acc, rest)
+    else
+      match rest with
+      | [] -> (List.rev acc, [])
+      | x :: xs -> aux (i - 1) (x :: acc) xs
+  in
+  aux n [] lst
+
 
 (* 2. Benchmark batch processing vs single processing *)
 let bench_batch_processing () =
@@ -68,6 +70,7 @@ let bench_frequent_cleanup () =
   let transactions = create_test_transactions size in
   List.iter (fun tx -> ignore (Mempool.add_transaction mempool tx)) transactions;
 
+  (* 10: very frequent, 50: moderate, 100: low frequency *)
   let cleanup_frequencies = [10; 50; 100] in
   List.map (fun freq ->
     Bench.Test.create ~name:(Printf.sprintf "cleanup_every_%d_tx" freq) (fun () ->

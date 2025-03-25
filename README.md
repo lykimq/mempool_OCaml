@@ -128,10 +128,16 @@ dune build @fmt --auto-promote
 
 The project includes performance benchmarks (using `Core_bench`) to measure and optimize critical operations. Benchmarks are located in the `benchmark/` directory and cover:
 
-- Transaction insertion throughput
-- Memory usage patterns
-- Transaction sorting performance (fee-based ordering)
-- Batch processing efficiency
+- Transaction Insertion Throughput:
+Measures how quickly transactions can be added to the mempool at different batch sizes and scales.
+- Transaction Retrieval Performance:
+Benchmarks the cost of retrieving transactions from the mempool, including sorting by fee.
+- Batch Processing Efficiency:
+Compares the performance of insearting transactions all at once versus processing them in fixed-size chunks (e.g., 1000 transactions at a time).
+- Frequent Cleanup Overhead:
+Simulates periodic mempool cleanup and analyzes how the frequence of cleanup (e.g., every 10, 50, 100 transactions) affects overall performance.
+- Memory and Aging Behavior:
+Tests the impact of transaction age on cleanup performance, using realistic timestamps to simulate time progression.
 
 To run the benchmarks:
 

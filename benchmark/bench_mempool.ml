@@ -10,7 +10,7 @@ let create_test_transactions  n =
     receiver = "receiver" ^ string_of_int i;
     amount = float_of_int i;
     fee = float_of_int (i mod 100) *. 0.01;
-    timestamp = Unix.time ()
+    timestamp = Unix.time () +. float_of_int i *. 0.001
   })
 
 (* Benchmark adding transactions to mempool *)
