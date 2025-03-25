@@ -39,38 +39,39 @@ Analysis:
 
 #### 1. Optimal Batch Size Analysis
 ```
-Batch Size | Time    | Memory Usage(minor) | Throughput
------------|---------|--------------|------------
-1,000 tx   | 3.57 ms | 48,989w       | ~280,000 tx/s
-2,000 tx   | 14.22 ms | 102,884w       | ~139,700 tx/s
-3,000 tx   | 35.44 ms | 150,150w       | ~84,600 tx/s
+Batch Size | Time     | Memory Usage(minor) | Throughput
+-----------|----------|---------------------|------------
+1,000 tx   | 3.57 ms  | 48,989w             | ~280,000 tx/s
+2,000 tx   | 14.22 ms | 102,884w            | ~139,700 tx/s
+3,000 tx   | 35.44 ms | 150,150w            | ~84,600 tx/s
 ```
-- Consistent throughput across batch sizes
-- Linear scaling in memory usage
+- Throughput descreases as batch size increases due to memory pressure.
+- Memory usage scales linearly.
 - Optimal performance in 1,000-3,000 tx range
 
 #### 2. Batch Processing vs Single Processing (10,000 tx)
 ```
-Method                    | Time     | Memory Usage(minor)
--------------------------|----------|-------------
-Single Process           | 233.73 ms | -41,113w
-Batched (1k chunks)      | 229.67.0 ms  | 60,075w
+Method                   | Time          | Memory Usage(minor)
+-------------------------|---------------|-------------
+Single Process           | 233.73 ms     | -41,113w
+Batched (1k chunks)      | 229.67.0 ms   | 60,075w
 ```
-- Batch processing shows 80% performance improvement
-- Better memory stability with batching
-- Recommended for high-volume scenarios
+- Batching performs slightly better, but the difference is small in this scale.
+- Memory behavior is more predictable with batching (`60k` minor allocations)
+- Still useful in real-world systems
 
 #### 3. Cleanup Frequency Impact
 ```
-Cleanup Frequency | Time   | Memory Usage(minor)
------------------|---------|-------------
-Every 10 tx      | 5.65 ms  | 48,989w
-Every 50 tx      | 4.91 ms  | 102,884w
-Every 100 tx     | 4.73 ms  | 150,150w
+Cleanup Frequency | Time     | Memory Usage(minor)
+------------------|----------|-------------
+Every 10 tx       | 5.65 ms  | 1,326w
+Every 50 tx       | 4.91 ms  | 286w
+Every 100 tx      | 4.73 ms  | 156w
 ```
-- Consistent performance regardless of frequency
-- Stable memory footprint
-- Safe to perform frequent cleanups
+- Cleanup peformance is excellent when called frequently.
+- Time and memory overhead scale sublinearly with cleanup frequently.
+- Safe and efficient to run frequent cleanups.
+
 
 ## Real-World Implications
 
@@ -78,8 +79,9 @@ Every 100 tx     | 4.73 ms  | 150,150w
 - Bitcoin: ~2,500 tx/block
 - Ethereum: ~100-300 tx/block
 Our implementation handles both scenarios efficiently:
-- 2,500 tx processing: ~16.5 ms
-- 300 tx processing: ~2 ms
+- 2,500 tx processing: ~12.0 ms
+- 300 tx processing: ~1.1 ms
+Based on `~280,000 tx/s` througput at 1,000 tx batch size.
 
 ### Recommendations
 1. Use batch sizes of 1,000-3,000 transactions for optimal performance
